@@ -4,12 +4,12 @@ namespace LennisDev;
 
 class RandomName
 {
-    private static function getRandomWordFromFile($filename)
+    private static function getRandomWordFromFile(string $filename): string
     {
         $lines = file($filename);
         return $lines[rand(0, count($lines) - 1)];
     }
-    public static function getRandomName()
+    public static function getRandomName(): string
     {
         $adjective = self::getRandomWordFromFile(__DIR__ . '/wordlists/adjectives.txt');
         $noun = self::getRandomWordFromFile(__DIR__ . '/wordlists/nouns.txt');
