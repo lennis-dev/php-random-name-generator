@@ -34,10 +34,21 @@ class RandomName
         $lines = file($filename);
         return $lines[rand(0, count($lines) - 1)];
     }
-    public static function getRandomName(): string
+    public static function getRandomName(string $pattern = "%a-%n-%d%d%d%d%d%d"): string
     {
-        $adjective = self::getRandomWordFromFile(__DIR__ . '/wordlists/adjectives.txt');
-        $noun = self::getRandomWordFromFile(__DIR__ . '/wordlists/nouns.txt');
-        return trim($adjective) . '-' . trim($noun) . '-' . str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        // count %adjectives%, %nouns% and %digits% in pattern
+        $adjectiveCount = substr_count($pattern, '%a');
+        $nounCount = substr_count($pattern, '%n');
+        $digitCount = substr_count($pattern, '%d');
+        for ($i = 0; $i < $adjectiveCount; $i++) {
+            $pattern = preg_replace('/%a/', trim(self::getRandomWordFromFile(__DIR__ . '/wordlists/adjectives.txt')), $pattern, 1);
+        }
+        for ($i = 0; $i < $nounCount; $i++) {
+            $pattern = preg_replace('/%n/', trim(self::getRandomWordFromFile(__DIR__ . '/wordlists/nouns.txt')), $pattern, 1);
+        }
+        for ($i = 0; $i < $digitCount; $i++) {
+            $pattern = preg_replace('/%d/', rand(0, 9), $pattern, 1);
+        }
+        return $pattern;
     }
 }
